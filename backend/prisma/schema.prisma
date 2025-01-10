@@ -1,0 +1,160 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    username         String             @unique
+    email            String             @unique
+    password         String
+    createdAt        DateTime           @default(now())
+    updatedAt        DateTime           @updatedAt
+    gender           String
+    age              Int
+    address          String
+    contact          String
+    avatar           String             @default("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
+    id               Int                @id @default(autoincrement())
+    role             Role               @default(USER)
+    appointments     Appointment[]
+    healthData       HealthData[]
+    userVerification UserVerification[]
+}
+
+model UserVerification {
+    id        Int      @id @default(autoincrement())
+    userId    Int
+    otp       String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    user      User     @relation(fields: [userId], references: [id])
+
+    @@unique([userId, otp])
+}
+
+model HealthData {
+    bloodType              String
+    createdAt              DateTime @default(now())
+    emergencyContactName   String?
+    emergencyContactNumber String?
+    healthStatus           String
+    insuranceProvider      String
+    policyEndDate          DateTime
+    policyNumber           String
+    policyStartDate        DateTime
+    updatedAt              DateTime @updatedAt
+    id                     Int      @id @default(autoincrement())
+    userId                 Int
+    allergies              String
+    chronicConditions      String
+    user                   User     @relation(fields: [userId], references: [id])
+
+    @@index([userId])
+}
+
+model Organization {
+    id           Int           @id @default(autoincrement())
+    name         String
+    address      String
+    latitude     String
+    longitude    String
+    contact      String
+    status       String        @default("Pending")
+    email        String        @unique
+    password     String
+    services     String[]
+    accessId     String        @unique
+    specialities String[]
+    appointments Appointment[]
+    doctors      Doctor[]
+}
+
+model Doctor {
+    id             Int           @id @default(autoincrement())
+    specialty      String
+    qualifications String
+    contact        String
+    organizationId Int
+    accessId       String        @unique
+    password       String
+    BloodGroup     String
+    address        String
+    age            String
+    bio            String
+    email          String
+    firstname      String
+    gender         String
+    lastname       String
+    photo          String
+    postalcode     String
+    appointments   Appointment[]
+    organization   Organization  @relation(fields: [organizationId], references: [id])
+    schedules      Schedule[]
+}
+
+model Schedule {
+    id           Int           @id @default(autoincrement())
+    doctorId     Int
+    dayOfWeek    Int           @default(0)
+    startTime    String        @default("09:00")
+    endTime      String        @default("17:00")
+    slotDuration Int           @default(30)
+    isActive     Boolean       @default(true)
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
+    appointments Appointment[]
+    doctor       Doctor        @relation(fields: [doctorId], references: [id])
+
+    @@unique([doctorId, dayOfWeek])
+    @@index([doctorId, dayOfWeek])
+}
+
+model Appointment {
+    id             String            @id @default(uuid())
+    date           DateTime
+    createdAt      DateTime          @default(now())
+    updatedAt      DateTime          @updatedAt
+    endTime        DateTime
+    scheduleId     Int
+    startTime      DateTime
+    status         AppointmentStatus @default(BOOKED)
+    patientEmail   String
+    patientName    String
+    doctorId       Int
+    organizationId Int
+    userId         Int
+    doctor         Doctor            @relation(fields: [doctorId], references: [id])
+    organization   Organization      @relation(fields: [organizationId], references: [id])
+    schedule       Schedule          @relation(fields: [scheduleId], references: [id])
+    user           User              @relation(fields: [userId], references: [id])
+
+    @@index([scheduleId, date])
+    @@index([startTime, endTime])
+}
+
+model ContactMessage {
+  id          Int      @id @default(autoincrement())
+  name        String
+  email       String
+  phoneNumber String
+  message     String
+  createdAt   DateTime @default(now())
+}
+
+enum Role {
+    ADMIN
+    HEALTHORG
+    DOCTOR
+    USER
+}
+
+enum AppointmentStatus {
+    BOOKED
+    CANCELLED
+    COMPLETED
+    NO_SHOW
+}

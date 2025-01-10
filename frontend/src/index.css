@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+/* Your other styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ... */
+
+@layer base {
+  :root {
+
+    --radius: 0.5rem}
+}
+
+.mapboxgl-popup-content {
+  font-family: 'Poppins', sans-serif;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.mapboxgl-popup-close-button {
+  font-size: 1.25rem;
+  padding: 0.25rem;
+}
+
+.map-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.mapboxgl-map {
+  width: 100%;
+  height: 100%;
+}
+.react-calendar {
+  width: 100%;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.react-calendar__tile--active {
+  background-color: #f472b6 !important; /* Tailwind's pink-400 */
+  color: white !important;
+  border-radius: 0.375rem;
+}
+
+.react-calendar__tile:hover {
+  background-color: #fce7f3; /* Tailwind's pink-100 */
+  border-radius: 0.375rem;
+}
