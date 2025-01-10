@@ -5,6 +5,8 @@
 🌐 Live Demo
 Access CureNest at: https://curenest.vercel.app
 
+🔡 Postman Collection URL: https://documenter.getpostman.com/view/33542076/2sAYQUqa8f
+
 ## 🏥 About CureNest
 
 CureNest is a comprehensive healthcare management system designed to streamline patient care and hospital management. Our platform integrates various healthcare services and features to provide a seamless experience for both patients and healthcare providers.
