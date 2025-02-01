@@ -7,6 +7,28 @@ Access CureNest at: https://curenest.vercel.app
 
 🔡 Postman Collection URL: https://documenter.getpostman.com/view/33542076/2sAYQUqa8f
 
+Access through 
+
+Patient login credentials 
+kshitijoza04@gmail.com 
+kshitij0504
+
+Admin login credentials 
+https://curenest.vercel.app/adminlogin
+admin@gmail.com
+admin123
+
+Hospital Login credentials 
+https://curenest.vercel.app/healthanddoc
+
+CN_ORG_46DFCB8F
+CN_ORG_46DFCB8F
+
+Doctor Login credentials 
+https://curenest.vercel.app/healthanddoc
+CN_DR_0F0B44E3
+gw7yif3c
+
 ## 🏥 About CureNest
 
 CureNest is a comprehensive healthcare management system designed to streamline patient care and hospital management. Our platform integrates various healthcare services and features to provide a seamless experience for both patients and healthcare providers.
