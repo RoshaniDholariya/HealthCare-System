@@ -10,24 +10,31 @@ Access CureNest at: https://curenest.vercel.app
 Access through 
 
 Patient login credentials 
-kshitijoza04@gmail.com 
-kshitij0504
+
+email: kshitijoza04@gmail.com 
+
+password: kshitij0504
 
 Admin login credentials 
 https://curenest.vercel.app/adminlogin
-admin@gmail.com
-admin123
+
+email: admin@gmail.com
+
+password: admin123
 
 Hospital Login credentials 
 https://curenest.vercel.app/healthanddoc
 
-CN_ORG_46DFCB8F
-CN_ORG_46DFCB8F
+ORG_ID: CN_ORG_46DFCB8F
+
+password: CN_ORG_46DFCB8F
 
 Doctor Login credentials 
 https://curenest.vercel.app/healthanddoc
-CN_DR_0F0B44E3
-gw7yif3c
+
+DOC_ID: CN_DR_0F0B44E3
+
+password: gw7yif3c
 
 ## 🏥 About CureNest
 
