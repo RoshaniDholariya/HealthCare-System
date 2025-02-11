@@ -1,48 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Line, Doughnut, Bar } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-} from "chart.js";
 import {
   Menu,
   TrendingUp,
   Users,
   Clock,
   BedDouble,
-  Heart,
-  Activity,
-  AlertTriangle,
+  HeartPulse,
 } from "lucide-react";
 import Sidebar from "./HospitalSidebar.jsx";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-);
-import axios from "axios";
-
-const HospitalDashboard = ({ hospitalId }) => {
+const HospitalDashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
-  
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -53,54 +23,75 @@ const HospitalDashboard = ({ hospitalId }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const revenueData = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-    datasets: [
-      {
-        label: "Revenue",
-        data: [30000, 35000, 32000, 38000, 42000, 45000],
-        fill: true,
-        backgroundColor: "rgba(20, 184, 166, 0.1)",
-        borderColor: "#14b8a6",
-        tension: 0.4,
-      },
-    ],
-  };
+  const doctors = [
+    {
+      name: "Dr. Emily Rodriguez",
+      specialty: "Cardiology",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emily",
+    },
+    {
+      name: "Dr. Michael Chen",
+      specialty: "Neurology",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Michael",
+    },
+    {
+      name: "Dr. Sarah Thompson",
+      specialty: "Pediatrics",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
+    },
+    {
+      name: "Dr. David Kim",
+      specialty: "Orthopedics",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=David",
+    },
+    {
+      name: "Dr. Jessica Liu",
+      specialty: "Oncology",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jessica",
+    },
+  ];
 
-  const patientDistribution = {
-    labels: ["Emergency", "Outpatient", "Inpatient", "ICU", "Surgery"],
-    datasets: [
-      {
-        data: [25, 35, 20, 10, 10],
-        backgroundColor: [
-          "#ef4444",
-          "#14b8a6",
-          "#6366f1",
-          "#f59e0b",
-          "#8b5cf6",
-        ],
-      },
-    ],
-  };
-
-  const occupancyData = {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    datasets: [
-      {
-        label: "ICU",
-        data: [85, 82, 88, 87, 86, 83, 84],
-        backgroundColor: "#ef4444",
-      },
-      {
-        label: "General",
-        data: [75, 78, 72, 76, 74, 70, 73],
-        backgroundColor: "#14b8a6",
-      },
-    ],
-  };
+  const statsCards = [
+    {
+      icon: BedDouble,
+      iconBg: "bg-teal-50",
+      iconColor: "text-teal-600",
+      label: "Bed Occupancy",
+      value: "82%",
+      trend: "↑ 3% this week",
+      trendColor: "text-teal-600",
+    },
+    {
+      icon: Users,
+      iconBg: "bg-indigo-50",
+      iconColor: "text-indigo-600",
+      label: "Active Patients",
+      value: "346",
+      trend: "↑ 12 today",
+      trendColor: "text-indigo-600",
+    },
+    {
+      icon: Clock,
+      iconBg: "bg-amber-50",
+      iconColor: "text-amber-600",
+      label: "Avg. Wait Time",
+      value: "18m",
+      trend: "↓ 2m from avg",
+      trendColor: "text-amber-600",
+    },
+    {
+      icon: TrendingUp,
+      iconBg: "bg-purple-50",
+      iconColor: "text-purple-600",
+      label: "Revenue",
+      value: "$52.4k",
+      trend: "↑ 8% this month",
+      trendColor: "text-purple-600",
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex">
       {isMobile && isSidebarOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-30"
@@ -115,9 +106,10 @@ const HospitalDashboard = ({ hospitalId }) => {
       />
 
       <div
-        className={`transition-all duration-300 ${
-          isSidebarOpen ? "md:ml-64" : "md:ml-20"
-        }`}
+        className={`
+          flex-1 transition-all duration-300 
+          ${isSidebarOpen ? "md:ml-64" : "md:ml-20"}
+        `}
       >
         <nav className="bg-white shadow-sm border-b px-6 flex items-center">
           {isMobile && (
@@ -131,94 +123,77 @@ const HospitalDashboard = ({ hospitalId }) => {
         </nav>
 
         <div className="p-6">
-          {/* Critical Alerts */}
-          <div className="mb-6 bg-teal-50 border border-teal-600 rounded-xl p-4">
-            <h1>Welcome Back, City Hospital</h1>
-            <h4>email:gadhiyasaloni@gmail.com</h4>
-            <h1>Access_id:CN_ORG_505D2E4B</h1>
+          {/* Welcome Section */}
+          <div className="bg-gradient-to-r from-teal-500 to-teal-700 text-white rounded-xl p-6 mb-6 shadow-lg">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold mb-2">
+                  Welcome Back, City Hospital
+                </h1>
+                <p className="text-sm md:text-base opacity-80">
+                  Access ID: CN_ORG_505D2E4B
+                </p>
+              </div>
+              <div className="mt-4 md:mt-0">
+                <HeartPulse className="w-12 h-12 text-white opacity-70" />
+              </div>
+            </div>
           </div>
 
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-            <div className="bg-white rounded-xl p-6 border border-gray-100">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-teal-50 rounded-lg">
-                  <BedDouble className="w-6 h-6 text-teal-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Bed Occupancy</p>
-                  <h4 className="text-2xl font-bold text-gray-900">82%</h4>
-                  <p className="text-xs text-teal-600">↑ 3% this week</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white rounded-xl p-6 border border-gray-100">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-indigo-50 rounded-lg">
-                  <Users className="w-6 h-6 text-indigo-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Active Patients</p>
-                  <h4 className="text-2xl font-bold text-gray-900">346</h4>
-                  <p className="text-xs text-indigo-600">↑ 12 today</p>
+            {statsCards.map((card, index) => (
+              <div
+                key={index}
+                className="
+                  bg-white rounded-xl p-6 border border-gray-100 
+                  hover:shadow-md transition-all duration-300
+                "
+              >
+                <div className="flex items-center gap-4">
+                  <div className={`p-3 ${card.iconBg} rounded-lg`}>
+                    <card.icon className={`w-6 h-6 ${card.iconColor}`} />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">{card.label}</p>
+                    <h4 className="text-2xl font-bold text-gray-900">
+                      {card.value}
+                    </h4>
+                    <p className={`text-xs ${card.trendColor}`}>{card.trend}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="bg-white rounded-xl p-6 border border-gray-100">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-amber-50 rounded-lg">
-                  <Clock className="w-6 h-6 text-amber-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Avg. Wait Time</p>
-                  <h4 className="text-2xl font-bold text-gray-900">18m</h4>
-                  <p className="text-xs text-amber-600">↓ 2m from avg</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white rounded-xl p-6 border border-gray-100">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-purple-50 rounded-lg">
-                  <TrendingUp className="w-6 h-6 text-purple-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Revenue</p>
-                  <h4 className="text-2xl font-bold text-gray-900">$52.4k</h4>
-                  <p className="text-xs text-purple-600">↑ 8% this month</p>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
 
-          {/* Charts Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white rounded-xl p-6 border border-gray-100">
-              <h3 className="font-semibold text-gray-800 mb-4">
-                Revenue Trend
-              </h3>
-              <Line
-                data={revenueData}
-                options={{
-                  plugins: { legend: { display: false } },
-                  scales: {
-                    y: { beginAtZero: true, grid: { display: false } },
-                  },
-                }}
-              />
-            </div>
-            <div className="bg-white rounded-xl p-6 border border-gray-100">
-              <h3 className="font-semibold text-gray-800 mb-4">
-                Patient Distribution
-              </h3>
-              <div className="flex justify-center" style={{ height: "300px" }}>
-                <Doughnut
-                  data={patientDistribution}
-                  options={{
-                    maintainAspectRatio: false,
-                    cutout: "70%",
-                  }}
-                />
-              </div>
+          {/* Doctors Section */}
+          <div className="bg-white rounded-xl p-6 border border-gray-100">
+            <h3 className="font-semibold text-gray-800 mb-4">
+              Hospital Doctors
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {doctors.map((doctor, index) => (
+                <div
+                  key={index}
+                  className="
+                    flex items-center space-x-4 
+                    p-4 bg-gray-50 rounded-xl 
+                    hover:bg-gray-100 transition-colors
+                  "
+                >
+                  <img
+                    src={doctor.avatar}
+                    alt={doctor.name}
+                    className="w-16 h-16 rounded-full object-cover"
+                  />
+                  <div>
+                    <h4 className="font-semibold text-gray-900">
+                      {doctor.name}
+                    </h4>
+                    <p className="text-sm text-gray-600">{doctor.specialty}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

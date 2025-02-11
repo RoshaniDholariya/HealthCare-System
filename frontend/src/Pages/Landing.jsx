@@ -156,12 +156,7 @@ const LandingPage = () => {
                   treatment.
                 </p>
                 <div className="mt-6 md:mt-8 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                  <button className="bg-teal-600 text-white px-8 py-3 rounded-md hover:bg-teal-700">
-                    Get Appointment
-                  </button>
-                  <button className="border-2 border-teal-600 text-teal-600 px-8 py-3 rounded-md hover:bg-teal-600 hover:text-white">
-                    Learn More
-                  </button>
+                  
                 </div>
               </div>
             </div>
@@ -184,12 +179,7 @@ const LandingPage = () => {
                   state-of-the-art facilities.
                 </p>
                 <div className="mt-6 md:mt-8 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                  <button className="bg-teal-600 text-white px-8 py-3 rounded-md hover:bg-teal-700">
-                    Book a Consultation
-                  </button>
-                  <button className="border-2 border-teal-600 text-teal-600 px-8 py-3 rounded-md hover:bg-teal-600 hover:text-white">
-                    Learn More
-                  </button>
+                 
                 </div>
               </div>
             </div>
@@ -212,12 +202,7 @@ const LandingPage = () => {
                   ensure your well-being.
                 </p>
                 <div className="mt-6 md:mt-8 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                  <button className="bg-teal-600 text-white px-8 py-3 rounded-md hover:bg-teal-700">
-                    Contact Us
-                  </button>
-                  <button className="border-2 border-teal-600 text-teal-600 px-8 py-3 rounded-md hover:bg-teal-600 hover:text-white">
-                    Learn More
-                  </button>
+                  
                 </div>
               </div>
             </div>

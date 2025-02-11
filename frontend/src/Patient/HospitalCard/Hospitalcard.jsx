@@ -83,29 +83,24 @@ const DashboardLayout = () => {
       )}
 
       <div
-        className={`fixed lg:static inset-y-0 left-0 transform ${
+        className={`fixed top-0 left-0 h-full w-64 transform ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 transition-transform duration-200 ease-in-out z-30`}
       >
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       </div>
       <div className="flex-1 min-w-0 lg:ml-64">
-        <header className="bg-white border-b p-4 lg:p-8 flex items-center justify-between">
-          <button
-            onClick={toggleSidebar}
-            className="p-2 rounded-lg lg:hidden hover:bg-gray-100"
-            aria-label="Toggle sidebar"
-          >
-            {sidebarOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
-          </button>
-          <h2 className="text-xl lg:text-2xl font-bold text-gray-800">
-            Hospital Details
-          </h2>
-        </header>
+        <button
+          onClick={toggleSidebar}
+          className="p-2 rounded-lg lg:hidden"
+          aria-label="Toggle sidebar"
+        >
+          {sidebarOpen ? (
+            <X className="w-6 h-6" />
+          ) : (
+            <Menu className="w-6 h-6 m-5" />
+          )}
+        </button>
 
         <main className="p-4 lg:p-6">
           {!selectedHospital ? (

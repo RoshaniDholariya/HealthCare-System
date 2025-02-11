@@ -1,19 +1,17 @@
 import React, { useState } from "react";
+import { Menu } from "lucide-react";
 import AppointmentsList from "./PatientAppoinmentList";
 
 const DashboardLayout = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="lg:ml-64 transition-margin duration-200 ease-in-out">
-        <header className="bg-white border-b h-24 p-8">
-          <div className="flex items-center justify-end lg:justify-start gap-4 mb-6">
-            <h2 className="text-xl lg:text-2xl font-bold text-gray-800">
-              My Appointments
-            </h2>
+      <div className="flex min-h-screen">
+        <main className="flex-1 min-w-0 overflow-auto">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+            <AppointmentsList />
           </div>
-        </header>
-        <main className="p-5">
-          <AppointmentsList />
         </main>
       </div>
     </div>

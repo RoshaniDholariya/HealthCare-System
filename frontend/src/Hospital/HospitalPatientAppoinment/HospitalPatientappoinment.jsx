@@ -3,7 +3,7 @@ import Sidebar from "../HospitalSidebar";
 import PatientTable from "./HospitalPatientTable";
 import PatientModal from "./HospitalPatientModel";
 import axios from "axios";
-import { Menu } from "lucide-react";
+import { Menu, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 const PatientDashboard = () => {
@@ -16,15 +16,21 @@ const PatientDashboard = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth < 768) {
+      const screenWidth = window.innerWidth;
+      const isMobileNow = screenWidth < 768;
+      setIsMobile(isMobileNow);
+
+      // Automatically close sidebar on mobile
+      if (isMobileNow) {
         setIsSidebarOpen(false);
+      } else {
+        // Open sidebar on desktop
+        setIsSidebarOpen(true);
       }
     };
 
-    window.addEventListener("resize", handleResize);
     handleResize();
-
+    window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -34,9 +40,7 @@ const PatientDashboard = () => {
         setIsLoading(true);
         const response = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/healthorg/getPatient`,
-          {
-            withCredentials: true,
-          }
+          { withCredentials: true }
         );
         setPatients(response.data.patients);
       } catch (error) {
@@ -54,17 +58,21 @@ const PatientDashboard = () => {
     setIsViewModalOpen(true);
   };
 
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
-  const mainContentClass = `transition-all duration-300 ease-in-out ${
-    isSidebarOpen ? "md:ml-64" : "md:ml-20"
-  } flex-1 min-h-screen bg-gray-50`;
+  const mainContentClass = `
+    transition-all duration-300 ease-in-out 
+    ${isSidebarOpen && !isMobile ? "md:ml-64" : "md:ml-0"} 
+    flex-1 min-h-screen bg-gray-50 relative
+  `;
 
   return (
     <div className="flex h-screen bg-gray-50">
       {isMobile && isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30"
+          className="fixed inset-0 bg-black bg-opacity-50 z-40"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
@@ -76,35 +84,34 @@ const PatientDashboard = () => {
       />
 
       <div className={mainContentClass}>
-        <div className="bg-white border-b sticky top-0 z-10">
-          <div className="px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4 h-16">
-                {isMobile && (
-                  <button onClick={toggleSidebar} className="p-2 rounded-lg">
-                    <Menu className="h-6 w-6 text-gray-600" />
-                  </button>
-                )}
-                <h1 className="text-2xl font-semibold text-gray-800">
-                  Appointment Management
-                </h1>
-              </div>
-            </div>
+        {/* Mobile Header with Sidebar Toggle */}
+        <div className="bg-white border-b sticky top-0 z-10 md:hidden">
+          <div className="px-4 py-3 flex items-center">
+            <button
+              onClick={toggleSidebar}
+              className="p-2 rounded-lg hover:bg-gray-100 mr-4"
+            >
+              <Menu className="h-6 w-6 text-gray-600" />
+            </button>
+            <h1 className="text-xl font-semibold text-gray-800">
+              Appointment Management
+            </h1>
           </div>
         </div>
 
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {isLoading ? (
-            <div className="flex-1 min-h-screen bg-gray-50 flex justify-center items-center">
-              <div className="text-lg text-gray-600">
-                <div className="animate-pulse font-semibold text-xl mb-4">
-                  Loading Appointments data...
-                </div>
+            <div className="flex justify-center items-center min-h-[calc(100vh-200px)]">
+              <div className="flex flex-col items-center space-y-4">
+                <Loader2 className="h-12 w-12 text-teal-500 animate-spin" />
+                <span className="text-teal-500 text-lg">
+                  Loading Appointments...
+                </span>
               </div>
             </div>
           ) : (
-            <Card>
-              <div className="p-4">
+            <Card className="w-full">
+              <div className="p-2 sm:p-4">
                 <PatientTable
                   patients={patients}
                   handleViewDetails={handleViewDetails}

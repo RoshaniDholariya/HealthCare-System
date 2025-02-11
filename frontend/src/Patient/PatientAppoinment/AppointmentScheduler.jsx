@@ -1,29 +1,99 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Calendar, Clock, User, Mail, Heart, Sun, FlaskConical, Pill, Scissors, UserRound, Microscope, Stethoscope, Activity, Brain, Eye, Bone, Baby, Syringe } from "lucide-react";
+import {
+  Calendar,
+  Clock,
+  User,
+  Mail,
+  Heart,
+  Sun,
+  FlaskConical,
+  Pill,
+  Scissors,
+  UserRound,
+  Microscope,
+  Stethoscope,
+  Activity,
+  Brain,
+  Eye,
+  Bone,
+  Baby,
+  Syringe,
+  Phone,
+} from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
 
 const SPECIALTIES = [
-  { name: "Cardiology", icon: Heart, description: "[❤️] Heart and cardiovascular system" },
-  { name: "Dermatology", icon: Sun, description: "[🌞] Skin conditions and treatments" },
-  { name: "Endocrinology", icon: FlaskConical, description: "[⚗️] Hormone and metabolic disorders" },
-  { name: "Gastroenterology", icon: Pill, description: "[💊] Digestive system disorders" },
-  { name: "General Surgery", icon: Scissors, description: "[✂️] Surgical procedures" },
+  {
+    name: "Cardiology",
+    icon: Heart,
+    description: "[❤️] Heart and cardiovascular system",
+  },
+  {
+    name: "Dermatology",
+    icon: Sun,
+    description: "[🌞] Skin conditions and treatments",
+  },
+  {
+    name: "Endocrinology",
+    icon: FlaskConical,
+    description: "[⚗️] Hormone and metabolic disorders",
+  },
+  {
+    name: "Gastroenterology",
+    icon: Pill,
+    description: "[💊] Digestive system disorders",
+  },
+  {
+    name: "General Surgery",
+    icon: Scissors,
+    description: "[✂️] Surgical procedures",
+  },
   { name: "Gynecology", icon: UserRound, description: "[👩] Women's health" },
   { name: "Hematology", icon: Microscope, description: "[🔬] Blood disorders" },
-  { name: "Internal Medicine", icon: Stethoscope, description: "[👨‍⚕️] General adult medicine" },
+  {
+    name: "Internal Medicine",
+    icon: Stethoscope,
+    description: "[👨‍⚕️] General adult medicine",
+  },
   { name: "Nephrology", icon: Activity, description: "[🫘] Kidney diseases" },
-  { name: "Neurology", icon: Brain, description: "[🧠] Nervous system disorders" },
-  { name: "Ophthalmology", icon: Eye, description: "[👁️] Eye care and surgery" },
-  { name: "Orthopedics", icon: Bone, description: "[🦴] Musculoskeletal system" },
+  {
+    name: "Neurology",
+    icon: Brain,
+    description: "[🧠] Nervous system disorders",
+  },
+  {
+    name: "Ophthalmology",
+    icon: Eye,
+    description: "[👁️] Eye care and surgery",
+  },
+  {
+    name: "Orthopedics",
+    icon: Bone,
+    description: "[🦴] Musculoskeletal system",
+  },
   { name: "Pediatrics", icon: Baby, description: "[👶] Children's health" },
-  { name: "Pulmonology", icon: Stethoscope, description: "[🫁] Respiratory system" },
+  {
+    name: "Pulmonology",
+    icon: Stethoscope,
+    description: "[🫁] Respiratory system",
+  },
   { name: "Radiology", icon: Syringe, description: "[💉] Medical imaging" },
-  { name: "Rheumatology", icon: Bone, description: "[🦴] Joint and autoimmune diseases" }
+  {
+    name: "Rheumatology",
+    icon: Bone,
+    description: "[🦴] Joint and autoimmune diseases",
+  },
 ];
 
 const AppointmentScheduler = ({ onClose, onAppointmentBooked }) => {
@@ -50,10 +120,14 @@ const AppointmentScheduler = ({ onClose, onAppointmentBooked }) => {
         setLoading(true);
         try {
           const { data } = await axios.get(
-            `${import.meta.env.VITE_BACKEND_URL}/user/organizations-by-specialty/${selectedSpecialty}`
+            `${
+              import.meta.env.VITE_BACKEND_URL
+            }/user/organizations-by-specialty/${selectedSpecialty}`
           );
-          console.log(data)
-          setOrganizations(Array.isArray(data.organizations) ? data.organizations : []);
+          console.log(data);
+          setOrganizations(
+            Array.isArray(data.organizations) ? data.organizations : []
+          );
           setSelectedOrganization(""); // Reset organization selection
           setDoctors([]); // Reset doctors
           setFilteredDoctors([]); // Reset filtered doctors
@@ -74,9 +148,11 @@ const AppointmentScheduler = ({ onClose, onAppointmentBooked }) => {
       const fetchDoctorsBySpecialty = async () => {
         try {
           const { data } = await axios.get(
-            `${import.meta.env.VITE_BACKEND_URL}/user/user/doctors/${selectedOrganization}/${selectedSpecialty}`
+            `${
+              import.meta.env.VITE_BACKEND_URL
+            }/user/user/doctors/${selectedOrganization}/${selectedSpecialty}`
           );
-          console.log(data.doctors)
+          console.log(data.doctors);
           setDoctors(data.doctors);
           setFilteredDoctors(data.doctors);
           setSelectedDoctor("");
@@ -110,14 +186,18 @@ const AppointmentScheduler = ({ onClose, onAppointmentBooked }) => {
           const { data } = await axios.get(
             `${import.meta.env.VITE_BACKEND_URL}/user/available-slots`,
             {
-              params: { doctorId: selectedDoctor, date: selectedDate }
+              params: { doctorId: selectedDoctor, date: selectedDate },
             }
           );
           setAvailableSlots(filterTimeSlots(data));
-          if (selectedSlot && !data.find(slot => 
-            slot.startTime === selectedSlot.startTime && 
-            slot.endTime === selectedSlot.endTime
-          )) {
+          if (
+            selectedSlot &&
+            !data.find(
+              (slot) =>
+                slot.startTime === selectedSlot.startTime &&
+                slot.endTime === selectedSlot.endTime
+            )
+          ) {
             setSelectedSlot(null);
           }
         } catch (error) {
@@ -130,12 +210,19 @@ const AppointmentScheduler = ({ onClose, onAppointmentBooked }) => {
   }, [selectedDate, selectedDoctor]);
 
   const handleBooking = async () => {
-    if (!selectedSpecialty || !selectedOrganization || !selectedDoctor || 
-        !selectedDate || !selectedSlot || !patientName || !patientEmail) {
+    if (
+      !selectedSpecialty ||
+      !selectedOrganization ||
+      !selectedDoctor ||
+      !selectedDate ||
+      !selectedSlot ||
+      !patientName ||
+      !patientEmail
+    ) {
       setBookingStatus("Please fill in all fields");
       return;
     }
-    console.log(currentUser.data)
+    console.log(currentUser.data);
     try {
       const { data } = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/user/book-appointment`,
@@ -147,22 +234,26 @@ const AppointmentScheduler = ({ onClose, onAppointmentBooked }) => {
           patientName,
           patientEmail,
           userId: currentUser.data.user.id,
-          specialty: selectedSpecialty
+          specialty: selectedSpecialty,
         }
       );
 
       const selectedDoctorInfo = doctors.find((d) => d.id === selectedDoctor);
-      const selectedOrgInfo = organizations.find((o) => o.id === selectedOrganization);
+      const selectedOrgInfo = organizations.find(
+        (o) => o.id === selectedOrganization
+      );
 
       const newAppointment = {
         _id: data.appointmentId,
-        doctorName: selectedDoctorInfo ? `${selectedDoctorInfo.firstname} ${selectedDoctorInfo.lastname}` : '',
-        organizationName: selectedOrgInfo ? selectedOrgInfo.name : '',
+        doctorName: selectedDoctorInfo
+          ? `${selectedDoctorInfo.firstname} ${selectedDoctorInfo.lastname}`
+          : "",
+        organizationName: selectedOrgInfo ? selectedOrgInfo.name : "",
         specialty: selectedSpecialty,
         date: selectedDate,
         startTime: selectedSlot.startTime,
         status: "Scheduled",
-        type: "Consultation"
+        type: "Consultation",
       };
 
       setBookingStatus("Appointment booked successfully!");
@@ -195,7 +286,10 @@ const AppointmentScheduler = ({ onClose, onAppointmentBooked }) => {
           <label className="text-sm font-medium text-teal-900">
             Select Specialty
           </label>
-          <Select value={selectedSpecialty} onValueChange={setSelectedSpecialty}>
+          <Select
+            value={selectedSpecialty}
+            onValueChange={setSelectedSpecialty}
+          >
             <SelectTrigger className="w-full border-teal-200 hover:border-teal-300 focus:ring-teal-500">
               <SelectValue placeholder="Select a specialty..." />
             </SelectTrigger>
@@ -221,7 +315,10 @@ const AppointmentScheduler = ({ onClose, onAppointmentBooked }) => {
             <label className="text-sm font-medium text-teal-900">
               Select Organization
             </label>
-            <Select value={selectedOrganization} onValueChange={setSelectedOrganization}>
+            <Select
+              value={selectedOrganization}
+              onValueChange={setSelectedOrganization}
+            >
               <SelectTrigger className="w-full border-teal-200 hover:border-teal-300 focus:ring-teal-500">
                 <SelectValue placeholder="Select an organization..." />
               </SelectTrigger>
@@ -264,7 +361,10 @@ const AppointmentScheduler = ({ onClose, onAppointmentBooked }) => {
               Select Date
             </label>
             <div className="relative">
-              <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-teal-500" size={20} />
+              <Calendar
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-teal-500"
+                size={20}
+              />
               <Input
                 type="date"
                 className="pl-10 border-teal-200 hover:border-teal-300 focus:ring-teal-500"
@@ -314,9 +414,7 @@ const AppointmentScheduler = ({ onClose, onAppointmentBooked }) => {
         {selectedSlot && (
           <div className="space-y-4 bg-white p-4 rounded-lg border border-teal-100">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-teal-900">
-                Name
-              </label>
+              <label className="text-sm font-medium text-teal-900">Name</label>
               <div className="relative">
                 <User
                   className="absolute left-3 top-1/2 transform -translate-y-1/2 text-teal-500"
@@ -333,11 +431,9 @@ const AppointmentScheduler = ({ onClose, onAppointmentBooked }) => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-teal-900">
-                Email
-              </label>
+              <label className="text-sm font-medium text-teal-900">Phone</label>
               <div className="relative">
-                <Mail
+                <Phone
                   className="absolute left-3 top-1/2 transform -translate-y-1/2 text-teal-500"
                   size={20}
                 />
@@ -346,20 +442,40 @@ const AppointmentScheduler = ({ onClose, onAppointmentBooked }) => {
                   className="pl-10 border-teal-200 hover:border-teal-300 focus:ring-teal-500"
                   value={patientEmail}
                   onChange={(e) => setPatientEmail(e.target.value)}
-                  placeholder="Enter your email"
+                  placeholder="Enter your Phone"
                 />
               </div>
             </div>
 
-            {/* Booking Summary */}
             <div className="mt-4 p-4 bg-teal-50 rounded-lg">
-              <h3 className="text-lg font-semibold text-teal-900 mb-2">Booking Summary</h3>
+              <h3 className="text-lg font-semibold text-teal-900 mb-2">
+                Booking Summary
+              </h3>
               <div className="space-y-2 text-sm text-teal-700">
-                <p><span className="font-medium">Specialty:</span> {selectedSpecialty}</p>
-                <p><span className="font-medium">Organization:</span> {organizations.find(org => org.id === selectedOrganization)?.name}</p>
-                <p><span className="font-medium">Doctor:</span> {doctors.find(doc => doc.id === selectedDoctor)?.firstname} {doctors.find(doc => doc.id === selectedDoctor)?.lastname}</p>
-                <p><span className="font-medium">Date:</span> {new Date(selectedDate).toLocaleDateString()}</p>
-                <p><span className="font-medium">Time:</span> {selectedSlot.startTime} - {selectedSlot.endTime}</p>
+                <p>
+                  <span className="font-medium">Specialty:</span>{" "}
+                  {selectedSpecialty}
+                </p>
+                <p>
+                  <span className="font-medium">Organization:</span>{" "}
+                  {
+                    organizations.find((org) => org.id === selectedOrganization)
+                      ?.name
+                  }
+                </p>
+                <p>
+                  <span className="font-medium">Doctor:</span>{" "}
+                  {doctors.find((doc) => doc.id === selectedDoctor)?.firstname}{" "}
+                  {doctors.find((doc) => doc.id === selectedDoctor)?.lastname}
+                </p>
+                <p>
+                  <span className="font-medium">Date:</span>{" "}
+                  {new Date(selectedDate).toLocaleDateString()}
+                </p>
+                <p>
+                  <span className="font-medium">Time:</span>{" "}
+                  {selectedSlot.startTime} - {selectedSlot.endTime}
+                </p>
               </div>
             </div>
 
