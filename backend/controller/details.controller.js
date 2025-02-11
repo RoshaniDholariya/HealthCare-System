@@ -1,8 +1,8 @@
 const crypto = require("crypto");
 const prisma = require("../config/connectDB");
 
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY 
-const IV = process.env.IV 
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY
+const IV = process.env.IV
 
 if (Buffer.from(ENCRYPTION_KEY, "hex").length !== 32) {
   throw new Error("Invalid ENCRYPTION_KEY. Must be 32 bytes in hexadecimal format.");
@@ -13,7 +13,7 @@ if (Buffer.from(IV, "hex").length !== 16) {
 }
 
 const encrypt = (text) => {
-  if (!text) return null; 
+  if (!text) return null;
   const cipher = crypto.createCipheriv(
     "aes-256-cbc",
     Buffer.from(ENCRYPTION_KEY, "hex"),
@@ -141,7 +141,7 @@ const getAppointment = async (req, res) => {
             lastname: true,
             organization: {
               select: {
-                name: true, // Assuming `name` is the organization's name field
+                name: true, // Assuming name is the organization's name field
               },
             },
           },
