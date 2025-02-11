@@ -13,38 +13,22 @@ import {
   AlertCircle,
   Plus,
   Heart,
+  LayoutDashboard,
 } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { useSelector } from "react-redux";
-import Sidebar from "../PatientSidebar";
 import { Link } from "react-router-dom";
+import Sidebar from "../PatientSidebar";
 
 const PatientDashboard = () => {
   const { currentUser } = useSelector((state) => state.user || {});
-  console.log(currentUser);
   const [user, setUser] = useState(null);
   const [healthData, setHealthData] = useState(null);
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -56,7 +40,6 @@ const PatientDashboard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log(currentUser.data.user.id);
       try {
         const [userResponse, healthResponse, appointmentsResponse] =
           await Promise.all([
@@ -98,10 +81,10 @@ const PatientDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 to-white">
         <div className="flex flex-col items-center gap-4">
           <div className="w-16 h-16 border-4 border-teal-500 border-t-transparent rounded-full animate-spin" />
-          <p className="text-teal-600 font-medium">
+          <p className="text-teal-600 font-medium text-lg">
             Loading your health dashboard...
           </p>
         </div>
@@ -109,15 +92,11 @@ const PatientDashboard = () => {
     );
   }
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
-
   return (
     <div className="flex h-screen bg-gray-50">
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-20 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -125,148 +104,172 @@ const PatientDashboard = () => {
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
       <div className="flex-1 flex flex-col min-h-screen lg:ml-64">
+        {/* Header */}
         <header
           className={`sticky top-0 z-10 transition-all duration-300 ${
-            isScrolled ? "bg-white/80 backdrop-blur-lg shadow-md" : "bg-white"
+            isScrolled ? "bg-white/80 backdrop-blur-md shadow-sm" : "bg-white"
           }`}
         >
-          <div className="px-4 py-4">
-            <div className="flex items-center justify-between">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="lg:hidden h-10 w-10"
-                onClick={toggleSidebar}
+          <div className="px-4 py-4 mx-auto max-w-7xl">
+            <div className="flex items-center justify-between gap-4">
+              <button
+                className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                onClick={() => setSidebarOpen(true)}
               >
-                <Menu className="h-6 w-6" />
-              </Button>
+                <Menu className="h-6 w-6 text-gray-600" />
+              </button>
 
-              <div className="flex items-center gap-4 flex-1 justify-end lg:justify-between">
-                <div className="hidden lg:block relative max-w-md">
-                  {" "}
-                  <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">
+              <div className="flex-1">
+                <div className="hidden lg:block">
+                  <h1 className="text-3xl font-bold text-gray-900 mb-1">
                     Welcome back, {user?.username}! 👋
                   </h1>
-                  <p className="text-gray-600 text-sm lg:text-base">
-                    Here's an overview of your health status and upcoming
-                    appointments.
+                  <p className="text-gray-600">
+                    Here's your health overview for today
                   </p>
                 </div>
+                <div className="lg:hidden">
+                  <h1 className="text-xl font-bold text-gray-900">
+                    Hi, {user?.username}!
+                  </h1>
+                </div>
+              </div>
 
-                <div className="flex items-center gap-4">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <div className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-xl transition-all">
-                        <Avatar className="h-10 w-10 ring-2 ring-teal-500/30">
-                          <AvatarImage
-                            src={user?.avatar}
-                            alt={user?.username}
-                          />
-                          <AvatarFallback className="bg-teal-50 text-teal-700">
-                            {user?.username?.charAt(0).toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="hidden lg:block">
-                          <span className="font-medium text-gray-900">
-                            {user?.username}
-                          </span>
-                          <p className="text-sm text-teal-600">Patient</p>
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <div
+                    className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-50 cursor-pointer transition-all"
+                    onClick={() => setShowDropdown(!showDropdown)}
+                  >
+                    <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-teal-500/30">
+                      {user?.avatar ? (
+                        <img
+                          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6upkc6jjdNBwfdiHyTHtOv0M4C2YHf4nmCQ&s"
+                          alt={user.username}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-teal-100 flex items-center justify-center text-teal-600 font-medium">
+                          {user?.username?.[0]?.toUpperCase()}
                         </div>
-                        <ChevronDown className="w-4 h-4 text-teal-500 ml-2" />
-                      </div>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-56 p-2">
+                      )}
+                    </div>
+                    <div className="hidden lg:block">
+                      <p className="font-medium text-gray-900">
+                        {user?.username}
+                      </p>
+                      <p className="text-sm text-teal-600">Patient</p>
+                    </div>
+                    <ChevronDown className="w-4 h-4 text-gray-400" />
+                  </div>
+
+                  {showDropdown && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
                       <Link
                         to="/contact"
-                        className="p-2 rounded-lg cursor-pointer hover:bg-teal-50"
+                        className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-50"
                       >
                         Help Center
                       </Link>
-                      <br />
                       <Link
                         to="/signin"
-                        className="p-2 rounded-lg cursor-pointer hover:bg-red-50 text-red-600"
+                        className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50"
                       >
                         Sign Out
                       </Link>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
         </header>
 
-        <main className="flex-1 overflow-auto px-4 lg:px-6 py-0">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 mt-6">
-            <Card className="lg:col-span-2 border-0 shadow-lg hover:shadow-xl transition-all bg-gradient-to-br from-teal-500 to-teal-600 text-white">
-              <CardContent className="p-10 w-auto">
-                <div className="flex items-center gap-6">
-                  <Avatar className="h-24 w-24 ring-4 ring-white/30 transition-transform hover:scale-105">
-                    <AvatarImage src={user?.avatar} alt={user?.username} />
-                    <AvatarFallback className="bg-white text-teal-700 text-2xl">
-                      {user?.username?.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <h2 className="text-2xl font-bold">Health Overview</h2>
-                    <p className="opacity-90 mb-4">Patient ID: #{user?.id}</p>
-                    <div className="flex gap-3">
-                      <Badge className="bg-white/20 hover:bg-white/30 transition-colors">
-                        Blood Type: {healthData?.bloodType}
-                      </Badge>
-                      <Badge className="bg-white/20 hover:bg-white/30 transition-colors">
-                        {healthData?.insuranceProvider}
-                      </Badge>
+        {/* Main Content */}
+        <main className="flex-1 overflow-auto px-4 lg:px-6 py-6 bg-gray-50">
+          <div className="max-w-7xl mx-auto space-y-6">
+            {/* Overview Card */}
+            <div className="bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl shadow-xl p-6 lg:p-8 text-white">
+              <div className="flex flex-col lg:flex-row items-center gap-6">
+                <div className="w-24 h-24 rounded-full overflow-hidden ring-4 ring-white/30 shadow-lg">
+                  {user?.avatar ? (
+                    <img
+                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6upkc6jjdNBwfdiHyTHtOv0M4C2YHf4nmCQ&s"
+                      alt={user.username}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-white flex items-center justify-center text-teal-600 text-2xl font-bold">
+                      {user?.username?.[0]?.toUpperCase()}
                     </div>
-                  </div>
-                  <Link
-                    to="/patient-appointments"
-                    className="flex items-center justify-center px-4 py-2 text-sm font-medium text-teal-600 bg-white rounded-lg shadow-md hover:bg-teal-50 hover:text-teal-700 transition-all duration-200"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    New Appointment
-                  </Link>
+                  )}
                 </div>
-              </CardContent>
-            </Card>
-          </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-all">
-              <CardHeader>
-                <div className="flex justify-between items-center">
-                  <div>
-                    <CardTitle>Upcoming Appointments</CardTitle>
-                    <CardDescription>
-                      Your next scheduled visits
-                    </CardDescription>
+                <div className="flex-1 text-center lg:text-left">
+                  <h2 className="text-2xl lg:text-3xl font-bold mb-2">
+                    Health Overview
+                  </h2>
+                  <p className="text-teal-100 mb-4">Patient ID: #{user?.id}</p>
+                  <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
+                    <span className="px-3 py-1 bg-white/20 rounded-full text-sm">
+                      Blood Type: {healthData?.bloodType}
+                    </span>
+                    <span className="px-3 py-1 bg-white/20 rounded-full text-sm">
+                      {healthData?.insuranceProvider}
+                    </span>
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent>
+
+                <Link
+                  to="/patient-appointments"
+                  className="flex items-center gap-2 px-6 py-3 bg-white text-teal-600 rounded-xl shadow-lg hover:bg-teal-50 transition-all"
+                >
+                  <Plus className="w-5 h-5" />
+                  <span className="font-medium">New Appointment</span>
+                </Link>
+              </div>
+            </div>
+
+            {/* Two Column Layout */}
+            <div className="grid lg:grid-cols-2 gap-6">
+              {/* Appointments Card */}
+              <div className="bg-white rounded-2xl shadow-lg p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900">
+                      Upcoming Appointments
+                    </h3>
+                    <p className="text-gray-500">Your scheduled visits</p>
+                  </div>
+                </div>
+
                 <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                   {appointments
                     .filter((apt) => apt.status === "BOOKED")
                     .map((appointment) => (
                       <div
                         key={appointment.id}
-                        className="flex items-start gap-4 p-4 rounded-xl border border-gray-100 hover:bg-gray-50 transition-all hover:shadow-md group"
+                        className="flex items-start gap-4 p-4 rounded-xl border border-gray-100 hover:bg-gray-50 transition-all group"
                       >
-                        <Avatar className="h-12 w-12 ring-2 ring-teal-100 transition-transform group-hover:scale-105">
-                          <AvatarImage
-                            src={appointment.doctor.photo}
-                            alt={`${appointment.doctor.firstname} ${appointment.doctor.lastname}`}
-                          />
-                          <AvatarFallback className="bg-teal-50 text-teal-700">
-                            {`${appointment.doctor.firstname[0]}${appointment.doctor.lastname[0]}`}
-                          </AvatarFallback>
-                        </Avatar>
+                        <div className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-teal-100">
+                          {appointment.doctor.photo ? (
+                            <img
+                              src={appointment.doctor.photo}
+                              alt={`${appointment.doctor.firstname} ${appointment.doctor.lastname}`}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-teal-50 flex items-center justify-center text-teal-600 font-medium">
+                              {`${appointment.doctor.firstname[0]}${appointment.doctor.lastname[0]}`}
+                            </div>
+                          )}
+                        </div>
+
                         <div className="flex-1">
-                          <div className="flex justify-between">
+                          <div className="flex justify-between items-start">
                             <div>
                               <p className="font-medium text-gray-900">
-                                {appointment.doctor.firstname}{" "}
+                                Dr. {appointment.doctor.firstname}{" "}
                                 {appointment.doctor.lastname}
                               </p>
                               <p className="text-sm text-gray-600">
@@ -276,32 +279,29 @@ const PatientDashboard = () => {
                                 )}
                               </p>
                             </div>
-                            <Badge
-                              variant="outline"
-                              className="bg-teal-50 border-teal-100 text-teal-600"
-                            >
+                            <span className="px-3 py-1 bg-teal-50 text-teal-600 rounded-full text-sm">
                               {format(new Date(appointment.startTime), "HH:mm")}
-                            </Badge>
+                            </span>
                           </div>
                         </div>
                       </div>
                     ))}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
 
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-all">
-              <CardHeader>
-                <div className="flex justify-between items-center">
+              {/* Emergency Info Card */}
+              <div className="bg-white rounded-2xl shadow-lg p-6">
+                <div className="flex justify-between items-center mb-6">
                   <div>
-                    <CardTitle>Emergency Information</CardTitle>
-                    <CardDescription>
-                      Important contacts and info
-                    </CardDescription>
+                    <h3 className="text-xl font-bold text-gray-900">
+                      Emergency Information
+                    </h3>
+                    <p className="text-gray-500">
+                      Important contacts and details
+                    </p>
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent>
+
                 <div className="space-y-4">
                   {[
                     {
@@ -342,16 +342,16 @@ const PatientDashboard = () => {
                   ].map((item, index) => (
                     <div
                       key={index}
-                      className="p-4 rounded-xl border border-gray-100 hover:bg-gray-50 transition-all hover:shadow-md group"
+                      className="p-4 rounded-xl border border-gray-100 hover:bg-gray-50 transition-all group"
                     >
                       <div className="flex items-start gap-4">
                         <div className="p-3 rounded-xl bg-teal-50 text-teal-600 group-hover:bg-teal-100 transition-colors">
                           {item.icon}
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-medium text-gray-900 mb-2">
+                          <h4 className="font-medium text-gray-900 mb-1">
                             {item.title}
-                          </h3>
+                          </h4>
                           {item.content.map((line, idx) => (
                             <p key={idx} className="text-sm text-gray-600">
                               {line}
@@ -362,11 +362,12 @@ const PatientDashboard = () => {
                     </div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         </main>
-        {/* Custom scrollbar styles */}
+
+        {/* Custom Scrollbar Styles */}
         <style jsx global>{`
           .custom-scrollbar::-webkit-scrollbar {
             width: 6px;

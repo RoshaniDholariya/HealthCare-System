@@ -1,380 +1,187 @@
 import React, { useState } from "react";
+import {
+  User,
+  Mail,
+  Phone,
+  Award,
+  Heart,
+  MapPin,
+  FileText,
+  Calendar,
+  Edit2,
+  Save,
+  Clock,
+  Star,
+  Building2,
+} from "lucide-react";
 
-const Profile = () => {
-  const [tab, setTab] = useState("profile");
+const DoctorProfile = () => {
+  const [activeTab, setActiveTab] = useState("overview");
+  const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
-    name: "Christopher Burrell",
-    number: "+(125) 458-8547",
-    email: "christopher.burrell@example.com",
+    firstName: "Sarah",
+    lastName: "Wilson",
+    age: "35",
     gender: "Female",
-    dob: "1993-09-13",
-    address: "Sydney, Australia",
-    bloodGroup: "O+",
-    age: "20",
-    medicines: " ",
+    contact: "+1 (555) 123-4567",
+    email: "sarah.wilson@medical.com",
+    qualifications: "MD, PhD in Cardiology",
+    specialty: "Cardiologist",
+    bloodGroup: "A+",
+    address: "123 Medical Center Drive, New York, NY",
+    postalCode: "10001",
+    bio: "Experienced cardiologist with over 10 years of practice in interventional cardiology. Specialized in complex cardiac procedures and preventive cardiology.",
   });
-
-  const [photo, setPhoto] = useState(null);
-
-  const pendingAppointments = [
-    {
-      title: "Cardiogram",
-      doctor: "Dr. Calvin Carlo",
-      date: "13 March",
-      icon: "❤️",
-    },
-    {
-      title: "Checkup",
-      doctor: "Dr. Cristino Murphy",
-      date: "5 May",
-      icon: "🩺",
-    },
-    {
-      title: "Covid Test",
-      doctor: "Dr. Alia Reddy",
-      date: "19 June",
-      icon: "🧪",
-    },
-    { title: "Dentist", doctor: "Dr. Toni Kovar", date: "20 June", icon: "🦷" },
+  const nextAppointments = [
+    { time: "09:00 AM", patient: "John Doe", type: "Checkup" },
+    { time: "10:30 AM", patient: "Jane Smith", type: "Consultation" },
+    { time: "02:00 PM", patient: "Mike Johnson", type: "Follow-up" },
   ];
-
-  const visitedDoctors = [
-    { doctor: "Dr. Calvin Carlo", visits: 3 },
-    { doctor: "Dr. Cristino Murphy", visits: 1 },
-    { doctor: "Dr. Alia Reddy", visits: 2 },
-  ];
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProfileData({ ...profileData, [name]: value });
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setPhoto(URL.createObjectURL(file));
-    }
-  };
-
-  const handleSaveChanges = () => {
-    alert("Changes saved successfully!");
-  };
-
-  const validateStep1 = () => {
-    const step1Errors = {};
-    if (!profileData.name.trim()) step1Errors.name = "Name is required.";
-    if (!profileData.number.trim() || !/^\d{10}$/.test(profileData.number))
-      step1Errors.number = "Valid phone number is required.";
-    if (
-      !profileData.email.trim() ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profileData.email)
-    )
-      step1Errors.email = "Valid email is required.";
-    if (!profileData.gender.trim()) step1Errors.gender = "Gender is required.";
-    if (!profileData.dob.trim()) step1Errors.dob = "Date of birth is required.";
-    if (!profileData.address.trim())
-      step1Errors.address = "Address is required.";
-    return step1Errors;
-  };
-
-  const calculateCompletion = () => {
-    const step1Errors = validateStep1();
-    const totalFields = Object.keys(profileData).length - 1;
-    const filledFields = totalFields - Object.keys(step1Errors).length;
-    return Math.round((filledFields / totalFields) * 100);
-  };
-
-  const profileCompletion = calculateCompletion();
 
   return (
-    <div className="flex flex-col items-center p-6">
-      <div className="w-full max-w-6xl bg-white rounded-lg p-6">
-        {" "}
-        <a
-          href="/patientdash"
-          className="flex items-center text-blue-500 hover:text-blue-700 focus:outline-none"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-5 h-5 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            strokeWidth="2"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M19 12H5m7-7l-7 7 7 7"
-            />
-          </svg>
-          Back
-        </a>
-        <div className="flex justify-between border-b">
-          <button
-            className={`px-4 py-2 w-1/2 text-center ${
-              tab === "profile"
-                ? "border-b-2 border-blue-500 text-blue-500 font-semibold"
-                : "text-gray-600"
-            }`}
-            onClick={() => setTab("profile")}
-          >
-            Profile
-          </button>
-          <button
-            className={`px-4 py-2 w-1/2 text-center ${
-              tab === "settings"
-                ? "border-b-2 border-blue-500 text-blue-500 font-semibold"
-                : "text-gray-600"
-            }`}
-            onClick={() => setTab("settings")}
-          >
-            Profile Settings
-          </button>
-        </div>
-        {tab === "profile" && (
-          <div className="flex flex-col md:flex-row mt-6">
-            <div className="w-full md:w-1/3 flex flex-col items-center">
-              <div className="relative w-full">
-                <div className="h-32 w-full rounded-t-lg bg-gradient-to-r from-purple-500 to-green-400"></div>
-                <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
-                  <img
-                    src={photo || "https://via.placeholder.com/100"}
-                    alt="profile"
-                    className="h-24 w-24 rounded-full border-4 border-white"
-                  />
-                </div>
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Profile Header */}
+        <div className="bg-white rounded-2xl shadow-md overflow-hidden">
+          <div className="h-32 bg-gradient-to-r from-teal-500 to-teal-600"></div>
+          <div className="relative px-4 sm:px-6 lg:px-8 pb-8">
+            <div className="flex flex-col sm:flex-row items-center sm:items-end -mt-16 sm:-mt-20 mb-4 sm:mb-0">
+              <div className="relative">
+                <img
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah"
+                  alt="Profile"
+                  className="w-32 h-32 rounded-full border-4 border-white shadow-lg bg-white"
+                />
+                {isEditing && (
+                  <button className="absolute bottom-0 right-0 bg-teal-500 p-2 rounded-full text-white hover:bg-teal-600">
+                    <Edit2 className="w-4 h-4" />
+                  </button>
+                )}
               </div>
-              <div className="mt-16 text-center">
-                <h2 className="text-xl font-semibold">{profileData.name}</h2>
-                <p className="text-gray-600">{`${
-                  new Date().getFullYear() -
-                  new Date(profileData.dob).getFullYear()
-                } Years old`}</p>
-              </div>
-              <div className="mt-6 w-full px-4">
-                <p className="text-gray-600 text-sm mb-2">
-                  Complete your profile
+              <div className="mt-6 sm:mt-0 sm:ml-6 text-center sm:text-left">
+                <h1 className="text-2xl font-bold text-gray-900">
+                  Dr. {profileData.firstName} {profileData.lastName}
+                </h1>
+                <p className="text-teal-600 font-medium">
+                  {profileData.specialty}
                 </p>
-                <div className="w-full bg-gray-200 rounded-full h-2.5">
-                  <div
-                    className="bg-blue-500 h-2.5 rounded-full"
-                    style={{ width: `${profileCompletion}%` }}
-                  ></div>
-                </div>
-                <p className="text-gray-600 text-sm mt-2 text-center">
-                  {profileCompletion}% Complete
+                <p className="text-gray-500 text-sm mt-1">
+                  {profileData.qualifications}
                 </p>
               </div>
-              <ul className="mt-6 w-full px-4 space-y-2 text-gray-600">
-                <li>
-                  <strong>Gender:</strong> {profileData.gender}
-                </li>
-                <li>
-                  <strong>Birthday:</strong>{" "}
-                  {new Date(profileData.dob).toLocaleDateString()}
-                </li>
-                <li>
-                  <strong>Age:</strong>{" "}
-                  {new Date().getFullYear() -
-                    new Date(profileData.dob).getFullYear()}
-                </li>
-                <li>
-                  <strong>Address:</strong> {profileData.address}
-                </li>
-                <li>
-                  <strong>Phone No.:</strong> {profileData.number}
-                </li>
-                <li>
-                  <strong>Medicines:</strong> {profileData.medicines}
-                </li>
-              </ul>
             </div>
+          </div>
+        </div>
 
-            <div className="w-full md:w-2/3 mt-6 md:mt-0 md:ml-6">
-              <h3 className="text-lg font-semibold">Introduction:</h3>
-              <p className="text-gray-600 mb-6">
-                Web designers to occupy the space which will later be filled
-                with 'real' content. This is required when, for example, the
-                final text is not yet available.
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="text-md font-semibold mb-4">
-                    Pending Appointments
-                  </h4>
-                  {pendingAppointments.map((appointment, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between bg-gray-100 p-4 rounded-lg mb-4"
-                    >
+        {/* Tabs and Content */}
+        <div className="mt-6 bg-white rounded-2xl shadow-md overflow-hidden">
+          <div className="border-b border-gray-200">
+            <nav className="flex space-x-8 px-6" aria-label="Tabs">
+              {["overview"].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`py-4 px-1 border-b-2 font-medium text-sm capitalize ${
+                    activeTab === tab
+                      ? "border-teal-500 text-teal-600"
+                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </nav>
+          </div>
+
+          <div className="p-6">
+            {activeTab === "overview" && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="md:col-span-2 space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      About Me
+                    </h3>
+                    <p className="text-gray-600">{profileData.bio}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Today's Appointments
+                    </h3>
+                    <div className="space-y-4">
+                      {nextAppointments.map((apt, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center p-4 bg-gray-50 rounded-xl"
+                        >
+                          <Clock className="w-5 h-5 text-teal-500 mr-4" />
+                          <div>
+                            <p className="font-medium text-gray-900">
+                              {apt.time} - {apt.patient}
+                            </p>
+                            <p className="text-sm text-gray-500">{apt.type}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="bg-gray-50 p-6 rounded-xl">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                      Personal Information
+                    </h3>
+                    <div className="space-y-4">
                       <div className="flex items-center">
-                        <span className="text-2xl mr-4">
-                          {appointment.icon}
-                        </span>
+                        <User className="w-5 h-5 text-teal-500 mr-3" />
                         <div>
-                          <p className="font-semibold">{appointment.title}</p>
-                          <p className="text-sm text-gray-500">
-                            {appointment.doctor}
+                          <p className="text-sm text-gray-500">Age</p>
+                          <p className="font-medium">{profileData.age} years</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center">
+                        <Heart className="w-5 h-5 text-teal-500 mr-3" />
+                        <div>
+                          <p className="text-sm text-gray-500">Blood Group</p>
+                          <p className="font-medium">
+                            {profileData.bloodGroup}
                           </p>
                         </div>
                       </div>
-                      <p className="text-gray-600">{appointment.date}</p>
+                      <div className="flex items-center">
+                        <Phone className="w-5 h-5 text-teal-500 mr-3" />
+                        <div>
+                          <p className="text-sm text-gray-500">Phone</p>
+                          <p className="font-medium">{profileData.contact}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center">
+                        <Mail className="w-5 h-5 text-teal-500 mr-3" />
+                        <div>
+                          <p className="text-sm text-gray-500">Email</p>
+                          <p className="font-medium">{profileData.email}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center">
+                        <MapPin className="w-5 h-5 text-teal-500 mr-3" />
+                        <div>
+                          <p className="text-sm text-gray-500">Address</p>
+                          <p className="font-medium">{profileData.address}</p>
+                          <p className="text-sm text-gray-500">
+                            Postal: {profileData.postalCode}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                  ))}
-                </div>
-
-                <div>
-                  <h4 className="text-md font-semibold mb-4">
-                    Visited Doctors
-                  </h4>
-                  {visitedDoctors.map((doctor, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between bg-gray-100 p-4 rounded-lg mb-4"
-                    >
-                      <p>{doctor.doctor}</p>
-                      <p className="text-blue-500 font-semibold">
-                        {doctor.visits} Visits
-                      </p>
-                    </div>
-                  ))}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
-        )}
-        {tab === "settings" && (
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold mb-6">
-              Personal Information:
-            </h3>
-            <form>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={profileData.name}
-                    onChange={handleChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    name="number"
-                    value={profileData.number}
-                    onChange={handleChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Address
-                  </label>
-                  <textarea
-                    name="address"
-                    value={profileData.address}
-                    onChange={handleChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Medicines
-                  </label>
-                  <textarea
-                    name="medicines"
-                    value={profileData.medicines}
-                    onChange={handleChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={profileData.email}
-                    onChange={handleChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Age
-                  </label>
-                  <input
-                    type="text"
-                    name="age"
-                    readOnly
-                    value={
-                      new Date().getFullYear() -
-                      new Date(profileData.dob).getFullYear()
-                    }
-                    className="mt-1 block w-full bg-gray-100 border border-gray-300 rounded-md shadow-sm p-2 cursor-not-allowed"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Gender
-                  </label>
-                  <input
-                    type="text"
-                    name="gender"
-                    value={profileData.gender}
-                    readOnly
-                    className="mt-1 block w-full bg-gray-100 border border-gray-300 rounded-md shadow-sm p-2 cursor-not-allowed"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Date of Birth
-                  </label>
-                  <input
-                    type="date"
-                    name="dob"
-                    value={profileData.dob}
-                    readOnly
-                    className="mt-1 block w-full bg-gray-100 border border-gray-300 rounded-md shadow-sm p-2 cursor-not-allowed"
-                  />
-                </div>
-                <div className="mt-6">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Upload Photo
-                  </label>
-                  <input
-                    type="file"
-                    onChange={handleFileChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                  />
-                </div>
-                <div className="mt-12 flex justify-end">
-                  <button
-                    type="button"
-                    onClick={handleSaveChanges}
-                    className="px-3 py-2 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600"
-                  >
-                    Save Changes
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );
 };
 
-export default Profile;
+export default DoctorProfile;
