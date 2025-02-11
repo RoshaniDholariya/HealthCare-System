@@ -82,6 +82,7 @@ model Doctor {
     accessId       String        @unique
     password       String
     BloodGroup     String
+    experience     Int
     address        String
     age            String
     bio            String
@@ -122,8 +123,9 @@ model Appointment {
     scheduleId     Int
     startTime      DateTime
     status         AppointmentStatus @default(BOOKED)
-    patientEmail   String
-    patientName    String
+    patientEmail   String?
+    patientName    String?
+    patientPhone   String
     doctorId       Int
     organizationId Int
     userId         Int

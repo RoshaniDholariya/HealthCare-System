@@ -63,7 +63,7 @@ async function getAvailableSlots(req, res) {
 
 async function bookAppointment(req, res) {
   try {
-    const { scheduleId, date, startTime, endTime, patientName, patientEmail, userId } = req.body;
+    const { scheduleId, date, startTime, endTime, patientName, patientPhone, userId } = req.body;
 
     // Ensure the user exists
     const user = await prisma.user.findUnique({
@@ -125,7 +125,7 @@ async function bookAppointment(req, res) {
         startTime: requestedStartTime,
         endTime: requestedEndTime,
         patientName,
-        patientEmail,
+        patientPhone,
         userId,
         doctorId: schedule.doctor.id,
         organizationId: schedule.doctor.organization.id,
