@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-🌐 Live-Demo
+🌐 Live Demo
 Access CureNest at: https://curenest.vercel.app
 
 🔡 Postman Collection URL: https://documenter.getpostman.com/view/33542076/2sAYQUqa8f
