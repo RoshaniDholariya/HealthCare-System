@@ -34,6 +34,7 @@ import DoctorApointmentList from "./Doctor/DoctorAppoinments/Doctorappoinments.j
 import DoctorPatientList from "./Doctor/DoctorPatientList.jsx";
 import HospitalPatientLists from "./Hospital/HospitalPatientList/HospitalPatientlist.jsx";
 import DoctorSchedule from "./Doctor/DoctorSchedule.jsx";
+import AdminAddHospital from "./Admin_new/AdminAddHealthcare.jsx";
 
 function App() {
   return (
@@ -104,6 +105,14 @@ function App() {
           element={
             <AdminRoute>
               <AdminDashboard_New />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin-add-hosp"
+          element={
+            <AdminRoute>
+              <AdminAddHospital />
             </AdminRoute>
           }
         />

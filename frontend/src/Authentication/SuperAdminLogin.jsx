@@ -139,26 +139,6 @@ const SuperAdminLogin = () => {
                 </div>
               </div>
 
-              {/* Remember Me & Forgot Password */}
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="remember"
-                    className="rounded border-teal-300 text-teal-600 focus:ring-teal-500"
-                  />
-                  <label htmlFor="remember" className="text-black">
-                    Remember me
-                  </label>
-                </div>
-                <a
-                  href="#"
-                  className="text-teal-600 hover:text-teal-800 transition-colors"
-                >
-                  Forgot password?
-                </a>
-              </div>
-
               {/* Submit Button */}
               <Button
                 type="submit"

@@ -1,8 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Home, Calendar, Users, Activity, LogOut, X } from "lucide-react";
 import logo from "../../assets/CureNest_logo.svg";
+
 const Sidebar = ({ isSidebarOpen, toggleSidebar, isMobile }) => {
+  const location = useLocation();
+
   const menuItems = [
     { icon: Home, label: "Dashboard", path: "/hospitaldash" },
     {
@@ -35,38 +38,67 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMobile }) => {
               onClick={toggleSidebar}
               className="p-2 rounded-lg hover:bg-teal-50 text-teal-600"
             >
-              {/* <X className="w-6 h-6" /> */}
+              <X className="w-6 h-6" />
             </button>
           )}
         </div>
-
         <nav className="flex-1 px-4 py-6 space-y-2">
-          {menuItems.map((item, index) => (
-            <Link key={index} to={item.path}>
-              <button
-                className="flex items-center w-full px-4 py-3 rounded-lg text-left 
-                transition-all duration-200 hover:bg-teal-50 active:bg-teal-100 
-                group relative overflow-hidden"
-              >
-                <div
-                  className="absolute left-0 top-0 h-full w-1 bg-teal-600 transform 
-                -translate-x-full group-hover:translate-x-0 transition-transform duration-200"
-                />
-                <item.icon
-                  className="w-5 h-5 text-gray-500 group-hover:text-teal-600 
-                transition-colors duration-200"
-                />
-                {isSidebarOpen && (
-                  <span
-                    className="ml-3 text-gray-700 group-hover:text-teal-600 
-                  transition-colors duration-200 font-medium"
-                  >
-                    {item.label}
-                  </span>
-                )}
-              </button>
-            </Link>
-          ))}
+          {menuItems.map((item, index) => {
+            const isActive = location.pathname === item.path;
+
+            return (
+              <Link key={index} to={item.path}>
+                <button
+                  className={`
+                    flex items-center w-full px-4 py-3 rounded-lg text-left
+                    transition-all duration-200 
+                    ${
+                      isActive
+                        ? "bg-teal-50 text-teal-600"
+                        : "hover:bg-teal-50 active:bg-teal-100"
+                    }
+                    group relative overflow-hidden
+                  `}
+                >
+                  <div
+                    className={`
+                      absolute left-0 top-0 h-full w-1 bg-teal-600 transform
+                      ${
+                        isActive
+                          ? "translate-x-0"
+                          : "-translate-x-full group-hover:translate-x-0"
+                      }
+                      transition-transform duration-200
+                    `}
+                  />
+                  <item.icon
+                    className={`
+                      w-5 h-5 transition-colors duration-200
+                      ${
+                        isActive
+                          ? "text-teal-600"
+                          : "text-gray-500 group-hover:text-teal-600"
+                      }
+                    `}
+                  />
+                  {isSidebarOpen && (
+                    <span
+                      className={`
+                        ml-3 font-medium transition-colors duration-200
+                        ${
+                          isActive
+                            ? "text-teal-600"
+                            : "text-gray-700 group-hover:text-teal-600"
+                        }
+                      `}
+                    >
+                      {item.label}
+                    </span>
+                  )}
+                </button>
+              </Link>
+            );
+          })}
         </nav>
       </div>
     </aside>

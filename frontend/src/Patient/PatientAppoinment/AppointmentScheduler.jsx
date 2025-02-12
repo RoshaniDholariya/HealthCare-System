@@ -108,7 +108,7 @@ const AppointmentScheduler = ({ onClose, onAppointmentBooked }) => {
   const [availableSlots, setAvailableSlots] = useState([]);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [patientName, setPatientName] = useState("");
-  const [patientEmail, setPatientEmail] = useState("");
+  const [patientPhone, setpatientPhone] = useState("");
   const [bookingStatus, setBookingStatus] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -217,7 +217,7 @@ const AppointmentScheduler = ({ onClose, onAppointmentBooked }) => {
       !selectedDate ||
       !selectedSlot ||
       !patientName ||
-      !patientEmail
+      !patientPhone
     ) {
       setBookingStatus("Please fill in all fields");
       return;
@@ -232,7 +232,7 @@ const AppointmentScheduler = ({ onClose, onAppointmentBooked }) => {
           startTime: selectedSlot.startTime,
           endTime: selectedSlot.endTime,
           patientName,
-          patientEmail,
+          patientPhone,
           userId: currentUser.data.user.id,
           specialty: selectedSpecialty,
         }
@@ -295,11 +295,11 @@ const AppointmentScheduler = ({ onClose, onAppointmentBooked }) => {
             </SelectTrigger>
             <SelectContent>
               {SPECIALTIES.map((specialty) => {
-                const SpecialtyIcon = specialty.icon;
+                // const SpecialtyIcon = specialty.icon;
                 return (
                   <SelectItem key={specialty.name} value={specialty.name}>
                     <div className="flex items-center space-x-2">
-                      <SpecialtyIcon className="w-4 h-4" />
+                      {/* <SpecialtyIcon className="w-4 h-4" /> */}
                       <span>{specialty.name}</span>
                     </div>
                   </SelectItem>
@@ -404,9 +404,7 @@ const AppointmentScheduler = ({ onClose, onAppointmentBooked }) => {
           </div>
         ) : (
           selectedDate && (
-            <div className="text-center text-teal-600">
-              No available slots for the selected date
-            </div>
+            <div className="text-center text-teal-600">Loading...</div>
           )
         )}
 
@@ -414,36 +412,65 @@ const AppointmentScheduler = ({ onClose, onAppointmentBooked }) => {
         {selectedSlot && (
           <div className="space-y-4 bg-white p-4 rounded-lg border border-teal-100">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-teal-900">Name</label>
-              <div className="relative">
-                <User
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-teal-500"
-                  size={20}
-                />
-                <Input
-                  type="text"
-                  className="pl-10 border-teal-200 hover:border-teal-300 focus:ring-teal-500"
-                  value={patientName}
-                  onChange={(e) => setPatientName(e.target.value)}
-                  placeholder="Enter your name"
-                />
-              </div>
+              <label className="text-sm font-medium text-teal-900">
+                Booking for
+              </label>
+              <RadioGroup
+                value={selectedPatientType}
+                onValueChange={setSelectedPatientType}
+                className="flex space-x-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="self" id="self" />
+                  <label htmlFor="self">Myself</label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="other" id="other" />
+                  <label htmlFor="other">Someone else</label>
+                </div>
+              </RadioGroup>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-teal-900">Phone</label>
-              <div className="relative">
-                <Phone
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-teal-500"
-                  size={20}
-                />
-                <Input
-                  type="email"
-                  className="pl-10 border-teal-200 hover:border-teal-300 focus:ring-teal-500"
-                  value={patientEmail}
-                  onChange={(e) => setPatientEmail(e.target.value)}
-                  placeholder="Enter your Phone"
-                />
+            {/* Patient Information */}
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-teal-900">
+                  Name
+                </label>
+                <div className="relative">
+                  <User
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-teal-500"
+                    size={20}
+                  />
+                  <Input
+                    type="text"
+                    className="pl-10 border-teal-200 hover:border-teal-300 focus:ring-teal-500"
+                    value={patientName}
+                    onChange={(e) => setPatientName(e.target.value)}
+                    placeholder="Enter patient name"
+                    disabled={selectedPatientType === "self"}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-teal-900">
+                  Phone
+                </label>
+                <div className="relative">
+                  <Phone
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-teal-500"
+                    size={20}
+                  />
+                  <Input
+                    type="tel"
+                    className="pl-10 border-teal-200 hover:border-teal-300 focus:ring-teal-500"
+                    value={patientPhone}
+                    onChange={(e) => setpatientPhone(e.target.value)}
+                    placeholder="Enter phone number"
+                    disabled={selectedPatientType === "self"}
+                  />
+                </div>
               </div>
             </div>
 

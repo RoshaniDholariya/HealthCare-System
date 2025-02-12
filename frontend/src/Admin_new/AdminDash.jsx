@@ -206,33 +206,6 @@ const OrganizationForm = ({
               required
             />
           </div>
-
-          <div className="grid grid-cols-2 gap-2">
-            <div>
-              <Label htmlFor="latitude">Latitude</Label>
-              <Input
-                id="latitude"
-                type="number"
-                step="any"
-                value={formData.latitude || ""}
-                onChange={handleChange}
-                placeholder="Latitude"
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="longitude">Longitude</Label>
-              <Input
-                id="longitude"
-                type="number"
-                step="any"
-                value={formData.longitude || ""}
-                onChange={handleChange}
-                placeholder="Longitude"
-                required
-              />
-            </div>
-          </div>
         </div>
 
         {/* Right column */}
@@ -329,8 +302,6 @@ const AdminDashboard_New = () => {
   const [newOrg, setNewOrg] = useState({
     name: "",
     address: "",
-    latitude: "",
-    longitude: "",
     contact: "",
     services: "",
     email: "",
@@ -410,8 +381,6 @@ const AdminDashboard_New = () => {
         contact: newOrg.contact,
         services: newOrg.services,
         email: newOrg.email,
-        location: newOrg.location,
-        specialities: selectedSpecialties,
       };
 
       console.log("Sending organization data:", orgData);
@@ -434,8 +403,6 @@ const AdminDashboard_New = () => {
         setNewOrg({
           name: "",
           address: "",
-          latitude: "",
-          longitude: "",
           contact: "",
           services: "",
           email: "",
@@ -457,54 +424,6 @@ const AdminDashboard_New = () => {
     }
   };
 
-  const handleDeleteOrg = async (id) => {
-    if (window.confirm("Are you sure you want to delete this organization?")) {
-      try {
-        await axios.delete(
-          `${import.meta.env.VITE_BACKEND_URL}/admin/organizations/${id}`
-        );
-        setOrganizations(organizations.filter((org) => org.id !== id));
-      } catch (error) {
-        console.error("Error deleting organization:", error);
-        setError("Failed to delete organization");
-      }
-    }
-  };
-
-  const handleEditOrg = async (formData) => {
-    try {
-      const response = await axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}/admin/organizations/${
-          editingOrg.id
-        }`,
-        formData,
-        {
-          withCredentials: true,
-        }
-      );
-      setOrganizations(
-        organizations.map((org) =>
-          org.id === editingOrg.id ? response.data.organization : org
-        )
-      );
-
-      setIsEditDialogOpen(false);
-      setEditingOrg(null);
-      setError(null);
-    } catch (error) {
-      console.error("Error updating organization:", error);
-      setError(
-        error.response?.data?.message || "Failed to update organization"
-      );
-    }
-  };
-
-  const openEditDialog = (org) => {
-    setEditingOrg(org);
-    setSelectedSpecialties(org.specialities || []);
-    setIsEditDialogOpen(true);
-  };
-
   const filteredOrganizations = organizations.filter(
     (org) =>
       org.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -518,7 +437,7 @@ const AdminDashboard_New = () => {
     return (
       <span className="inline-flex items-center px-2 py-1 bg-teal-50 text-teal-700 rounded-full text-xs gap-1">
         <IconComponent className="h-3 w-3" />
-        {specialty} {specialtyInfo?.description.split("]")[0]}]
+        {specialty} {specialtyInfo?.description.split("]")[0]}
       </span>
     );
   };
@@ -567,12 +486,6 @@ const AdminDashboard_New = () => {
               icon: Activity,
               color: "indigo",
             },
-            {
-              title: "Appointments",
-              value: dashboardanalytics.totalAppointments,
-              icon: Calendar,
-              color: "purple",
-            },
           ].map((item) => (
             <Card
               key={item.title}
@@ -600,7 +513,6 @@ const AdminDashboard_New = () => {
         </div>
 
         <div className="ml-64 p-8">
-          {/* Organizations header and add button */}
           <div className="flex justify-between items-center mb-6">
             <div>
               <h1 className="text-3xl font-bold text-gray-800">
@@ -610,184 +522,6 @@ const AdminDashboard_New = () => {
                 Manage and monitor healthcare facilities
               </p>
             </div>
-
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-teal-600 hover:bg-teal-700">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Organization
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[700px] max-h-[80vh] flex flex-col">
-                <DialogHeader>
-                  <DialogTitle>Add New Health Organization</DialogTitle>
-                </DialogHeader>
-
-                {/* Scrollable Content */}
-                <div className="flex-1 overflow-y-auto">
-                  <form onSubmit={handleAddOrganization}>
-                    <div className="grid grid-cols-2 gap-4">
-                      {/* Left column */}
-                      <div className="space-y-4">
-                        <div>
-                          <Label htmlFor="name">Organization Name</Label>
-                          <Input
-                            id="name"
-                            value={newOrg.name}
-                            onChange={(e) =>
-                              setNewOrg({ ...newOrg, name: e.target.value })
-                            }
-                            placeholder="Enter organization name"
-                            required
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="location">Location</Label>
-                          <Input
-                            id="location"
-                            value={newOrg.location}
-                            onChange={(e) =>
-                              setNewOrg({ ...newOrg, location: e.target.value })
-                            }
-                            placeholder="Enter city/location"
-                            required
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="address">Address</Label>
-                          <Input
-                            id="address"
-                            value={newOrg.address}
-                            onChange={(e) =>
-                              setNewOrg({ ...newOrg, address: e.target.value })
-                            }
-                            placeholder="Enter full address"
-                            required
-                          />
-                        </div>
-                        <div className="grid grid-cols-2 gap-2">
-                          <div>
-                            <Label htmlFor="latitude">Latitude</Label>
-                            <Input
-                              id="latitude"
-                              type="number"
-                              step="any"
-                              value={newOrg.latitude}
-                              onChange={(e) =>
-                                setNewOrg({
-                                  ...newOrg,
-                                  latitude: e.target.value,
-                                })
-                              }
-                              placeholder="Latitude"
-                              required
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="longitude">Longitude</Label>
-                            <Input
-                              id="longitude"
-                              type="number"
-                              step="any"
-                              value={newOrg.longitude}
-                              onChange={(e) =>
-                                setNewOrg({
-                                  ...newOrg,
-                                  longitude: e.target.value,
-                                })
-                              }
-                              placeholder="Longitude"
-                              required
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Right column */}
-                      <div className="space-y-4">
-                        <div>
-                          <Label htmlFor="contact">Contact</Label>
-                          <Input
-                            id="contact"
-                            value={newOrg.contact}
-                            onChange={(e) =>
-                              setNewOrg({ ...newOrg, contact: e.target.value })
-                            }
-                            placeholder="Enter contact number"
-                            required
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="email">Email</Label>
-                          <Input
-                            id="email"
-                            type="email"
-                            value={newOrg.email}
-                            onChange={(e) =>
-                              setNewOrg({ ...newOrg, email: e.target.value })
-                            }
-                            placeholder="Enter email address"
-                            required
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="services">Services</Label>
-                          <Input
-                            id="services"
-                            value={newOrg.services}
-                            onChange={(e) =>
-                              setNewOrg({ ...newOrg, services: e.target.value })
-                            }
-                            placeholder="Enter services (comma-separated)"
-                            required
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Specialties Section */}
-                    <div className="mt-6">
-                      <Label className="text-lg font-semibold">
-                        Specialties
-                      </Label>
-                      <p className="text-sm text-gray-500 mb-4">
-                        Select the medical specialties offered at this facility
-                      </p>
-                      <div className="grid grid-cols-2 gap-3 max-h-[400px] overflow-y-auto p-4 border rounded-lg">
-                        {SPECIALTIES.map((specialty) => (
-                          <SpecialtyCard
-                            key={specialty.name}
-                            specialty={specialty}
-                            isSelected={selectedSpecialties.includes(
-                              specialty.name
-                            )}
-                            onToggle={handleSpecialtyChange}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </form>
-                </div>
-
-                {/* Sticky Add Button */}
-                <div className="mt-4">
-                  <Button
-                    type="submit"
-                    className="w-full bg-teal-600 hover:bg-teal-700"
-                    disabled={addingOrg}
-                  >
-                    {addingOrg ? (
-                      <div className="flex items-center justify-center">
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                        Adding Organization...
-                      </div>
-                    ) : (
-                      "Add Organization"
-                    )}
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
           </div>
 
           {/* Organizations Grid */}
@@ -807,48 +541,6 @@ const AdminDashboard_New = () => {
                     <CardTitle className="text-lg font-bold">
                       {org.name}
                     </CardTitle>
-                    <div className="space-x-2">
-                      <Dialog
-                        open={isEditDialogOpen}
-                        onOpenChange={setIsEditDialogOpen}
-                      >
-                        <DialogContent className="sm:max-w-[700px] max-h-[80vh] overflow-hidden flex flex-col">
-                          <DialogHeader className="flex-shrink-0">
-                            <DialogTitle>Edit Organization</DialogTitle>
-                          </DialogHeader>
-
-                          {/* Scrollable container */}
-                          <div className="flex-1 overflow-y-auto px-1">
-                            {editingOrg && (
-                              <OrganizationForm
-                                organization={editingOrg}
-                                selectedSpecialties={selectedSpecialties}
-                                setSelectedSpecialties={setSelectedSpecialties}
-                                onSubmit={handleEditOrg}
-                                isSubmitting={false}
-                                buttonText="Update Organization"
-                              />
-                            )}
-                          </div>
-                        </DialogContent>
-                      </Dialog>
-
-                      {/* In the organization card, update the Edit button */}
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => openEditDialog(org)}
-                      >
-                        <Edit className="h-4 w-4 text-teal-600" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDeleteOrg(org.id)}
-                      >
-                        <Trash2 className="h-4 w-4 text-red-500" />
-                      </Button>
-                    </div>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3 text-sm text-gray-600">
