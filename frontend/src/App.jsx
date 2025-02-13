@@ -35,7 +35,7 @@ import DoctorPatientList from "./Doctor/DoctorPatientList.jsx";
 import HospitalPatientLists from "./Hospital/HospitalPatientList/HospitalPatientlist.jsx";
 import DoctorSchedule from "./Doctor/DoctorSchedule.jsx";
 import AdminAddHospital from "./Admin_new/AdminAddHealthcare.jsx";
-import HospitalRegister from "./Pages/HospitalRegister.jsx";
+import HospitalRegister from "./Pages/Hospital/HospitalRegister.jsx";
 
 function App() {
   return (
