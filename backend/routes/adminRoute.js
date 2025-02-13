@@ -5,11 +5,14 @@ const {
   getUsers,
   getDoctors,
   getDashboardAnalytics,
+  approveHospital,
+  getPendingHospitals,
 } = require("../controller/admin.controller");
 const { authMiddleware } = require("../middleware/authMiddleware");
 const prisma = require('../config/connectDB')
 const router = express.Router();
-
+router.get("/pending-hospitals",getPendingHospitals);
+router.post("/approveHospital",approveHospital);
 router.post("/add", authMiddleware, addHealthCareOrganisation);
 router.get("/org", authMiddleware, getAllHealthCareOrganizations);
 router.get("/users", authMiddleware, getUsers);

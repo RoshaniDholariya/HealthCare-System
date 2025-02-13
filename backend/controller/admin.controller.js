@@ -7,6 +7,48 @@ const hashPassword = async (password) => {
   const salt = await bcryptjs.genSalt(10);
   return bcryptjs.hash(password, salt);
 };
+const getPendingHospitals = async (req, res) => {
+  try {
+      const hospitals = await prisma.organization.findMany({ where: { status: "Pending" } });
+      res.status(200).json(hospitals);
+  } catch (error) {
+      res.status(500).json({ message: "Server error" });
+  }
+};
+
+const approveHospital = async (req, res) => {
+  try {
+      const hospitalId = parseInt(req.body.id);
+      if (!hospitalId) {
+        return res.status(400).json({ message: "Hospital ID is required" });
+    }
+    const hospitalI = parseInt(hospitalId);
+      // Find hospital
+      const hospital = await prisma.organization.findUnique({ where: { id: hospitalI } });
+      if (!hospital) return res.status(404).json({ message: "Hospital not found" });
+      const password = `${uuidv4().split("-")[0].toUpperCase()}`;
+      
+      const hashedPassword = await hashPassword(password);
+      // Approve hospital
+      const updatedHospital = await prisma.organization.update({
+          where: { id: hospitalId },
+          data: { status: "Approved",password:hashedPassword }
+
+      });
+
+      // Send approval email
+      await sendEmail(hospital.email, "Hospital Registration Approved", 
+          `Dear ${hospital.name},\n\nYour hospital registration has been approved.\n\nLogin Details:\nEmail: ${hospital.email}\nPassword:${password}\n\nThank you!`
+      );
+
+      res.status(200).json({ message: "Hospital approved and email sent", hospital: updatedHospital });
+
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Server error" });
+  }
+};
+
 
 const addHealthCareOrganisation = async (req, res) => {
   try {
@@ -203,6 +245,8 @@ const getDoctors = async (req, res) => {
 };
 
 module.exports = {
+  getPendingHospitals,
+  approveHospital,
   addHealthCareOrganisation,
   getAllHealthCareOrganizations,
   getUsers,

@@ -4,6 +4,58 @@ const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 const { sendEmail } = require("../config/emailService");
 
+const hashPassword = async (password) => {
+  const salt = await bcrypt.genSalt(10);
+  return bcrypt.hash(password, salt);
+};
+
+
+const registerHospital = async (req, res) => {
+  try {
+      console.log("Received Body:", req.body); // Debugging log
+
+      const { name, address, contact, certificate, email, services, specialities } = req.body;
+
+      if (!email) {
+          return res.status(400).json({ message: "Email is required" });
+      }
+  
+      // Convert services and specialities to an array if they are strings
+      const servicesArray = Array.isArray(services) ? services : services?.split(",").map(s => s.trim()) || [];
+      const specialitiesArray = Array.isArray(specialities) ? specialities : specialities?.split(",").map(s => s.trim()) || [];
+
+      const existingHospital = await prisma.organization.findUnique({ where: { email } });
+      if (existingHospital) {
+          return res.status(400).json({ message: "Hospital already registered" });
+      }
+
+      const accessId = `HOSP-${Date.now()}`;
+
+      if (!req.file) {
+          return res.status(400).json({ message: "Certificate is required" });
+      }
+
+      const certificateUrl = req.file.path;
+      
+      const newHospital = await prisma.organization.create({
+          data: {
+              name, address, contact, email,
+              services: servicesArray,  
+              specialities: specialitiesArray,
+              certificate: certificateUrl,
+              accessId,
+              status: "Pending"
+          }
+      });
+
+      res.status(201).json({ message: "Registration request sent to admin", hospital: newHospital });
+
+  } catch (error) {
+      console.error("Error:", error);
+      res.status(500).json({ message: "Server error" });
+  }
+};
+
 const healthOrgSignin = async (req, res) => {
   const { id, password } = req.body;
 
@@ -273,6 +325,7 @@ const getPatient = async (req, res) => {
 };
 
 module.exports = {
+  registerHospital,
   healthOrgSignin,
   addDoctor,
   getDoctors,

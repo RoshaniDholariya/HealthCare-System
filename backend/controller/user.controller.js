@@ -17,7 +17,14 @@ const register = async (req, res) => {
     data: { username, email, password: hashedPassword, gender, age: parseInt(age), contact, address },
   });
 
-  const otp = otpGenerator.generate(6, { digits: true });
+  const otp = otpGenerator.generate(6, { 
+    digits: true, 
+    lowerCaseAlphabets: false, 
+    upperCaseAlphabets: false, 
+    specialChars: false 
+});
+
+console.log("Generated OTP:", otp);
   await prisma.userVerification.create({ data: { userId: newUser.id, otp } });
 
   await sendEmail(
