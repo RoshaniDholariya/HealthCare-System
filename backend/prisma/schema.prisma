@@ -81,7 +81,7 @@ model Doctor {
     accessId       String        @unique
     password       String
     BloodGroup     String
-    experience     Int
+    experience     String
     address        String
     age            String
     bio            String
@@ -138,12 +138,12 @@ model Appointment {
 }
 
 model ContactMessage {
-  id          Int      @id @default(autoincrement())
-  name        String
-  email       String
-  phoneNumber String
-  message     String
-  createdAt   DateTime @default(now())
+    id          Int      @id @default(autoincrement())
+    name        String
+    email       String
+    phoneNumber String
+    message     String
+    createdAt   DateTime @default(now())
 }
 
 enum Role {

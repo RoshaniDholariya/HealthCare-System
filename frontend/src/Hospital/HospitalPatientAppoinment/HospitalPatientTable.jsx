@@ -1,101 +1,117 @@
-import React from "react";
-import { Eye, MoreVertical, Loader2 } from "lucide-react";
+import React, { useState } from "react";
+import { Eye, Calendar, ChevronDown } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const PatientTable = ({ patients, handleViewDetails, isLoading }) => {
+  const [dateFilter, setDateFilter] = useState("all");
+
   if (isLoading) {
     return (
-      <div className="min-h-[400px] flex items-center justify-center">
-        <div className="text-center space-y-3">
-          <Loader2 className="h-8 w-8 animate-spin text-teal-500 mx-auto" />
-          <p className="text-gray-500">Loading patients...</p>
+      <div className="flex items-center justify-center p-8">
+        <div className="flex items-center gap-2">
+          <div className="animate-spin">
+            <Calendar className="h-5 w-5 text-teal-600" />
+          </div>
+          <span className="text-gray-600">Loading patients...</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full">
-        <thead>
-          <tr className="bg-gray-50">
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Patient Name
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Email
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Username
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Appointments
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Status
-            </th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {patients.map((patient, index) => (
-            <tr
-              key={index}
-              className="hover:bg-gray-50 transition-colors duration-150"
-            >
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="flex items-center">
-                  <div className="h-10 w-10 rounded-full bg-teal-100 flex items-center justify-center">
-                    <span className="text-teal-600 font-medium">
-                      {patient.patientName.charAt(0)}
-                    </span>
-                  </div>
-                  <div className="ml-4">
-                    <div className="text-sm font-medium text-gray-900">
-                      {patient.patientName}
+    <Card className="w-full">
+      <div className="flex items-center justify-between p-4 border-b">
+        <h2 className="text-xl font-semibold text-gray-800">Patient Records</h2>
+        {/* <Select value={dateFilter} onValueChange={setDateFilter}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filter by date" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Time</SelectItem>
+            <SelectItem value="today">Today</SelectItem>
+            <SelectItem value="week">This Week</SelectItem>
+            <SelectItem value="month">This Month</SelectItem>
+          </SelectContent>
+        </Select> */}
+      </div>
+      <CardContent className="p-0">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b bg-gray-50">
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+                  Patient Name
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+                  Contact Number
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+                  Doctor Name
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+                  Last Visit
+                </th>
+                <th className="px-6 py-3 text-center text-sm font-semibold text-gray-600">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {patients.map((patient, index) => (
+                <tr
+                  key={patient.id || index}
+                  className="border-b hover:bg-gray-50 transition-colors"
+                >
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center">
+                        <span className="text-sm font-medium text-teal-700">
+                          {patient.patientName.charAt(0)}
+                        </span>
+                      </div>
+                      <span className="font-medium text-gray-900">
+                        {patient.patientName}
+                      </span>
                     </div>
-                  </div>
-                </div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-500">
-                  {patient.patientEmail}
-                </div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-500">
-                  {patient.user.username}
-                </div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-500">
-                  {patient.appointmentCount}
-                </div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                  Active
-                </span>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <div className="flex items-center justify-end gap-2">
-                  <button
-                    onClick={() => handleViewDetails(patient)}
-                    className="p-1 rounded-lg hover:bg-gray-100 text-teal-600"
-                  >
-                    <Eye className="h-5 w-5" />
-                  </button>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {patients.length === 0 && !isLoading && (
-        <div className="text-center py-12">
-          <div className="text-gray-400 text-lg">No patients found</div>
+                  </td>
+                  <td className="px-6 py-4 text-gray-600">
+                    {patient.contactNumber}
+                  </td>
+                  <td className="px-6 py-4 text-gray-600">
+                    {patient.doctorName}
+                  </td>
+                  <td className="px-6 py-4 text-gray-600">
+                    {new Date(patient.lastVisitDate).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex justify-center">
+                      <button
+                        onClick={() => handleViewDetails(patient)}
+                        className="p-2 rounded-lg hover:bg-gray-100 text-teal-600 transition-colors"
+                      >
+                        <Eye className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {patients.length === 0 && !isLoading && (
+            <div className="text-center py-8 text-gray-500">
+              No patients found
+            </div>
+          )}
         </div>
-      )}
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

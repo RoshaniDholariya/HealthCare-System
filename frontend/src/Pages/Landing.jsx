@@ -77,6 +77,11 @@ const LandingPage = () => {
                   Sign In
                 </button>
               </a>
+              <a href="/hospital-register">
+                <button className="bg-teal-600 text-white px-6 py-2 rounded-md hover:bg-teal-700">
+                  Hospital Register
+                </button>
+              </a>
             </div>
 
             <button

@@ -16,7 +16,6 @@ const PatientModal = ({
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm">
       <div className="flex min-h-screen items-center justify-center p-4">
         <div className="relative w-full max-w-2xl rounded-xl bg-white shadow-2xl">
-          {/* Header */}
           <div className="flex items-center justify-between border-b p-6">
             <div className="flex items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
@@ -41,10 +40,8 @@ const PatientModal = ({
             </Button>
           </div>
 
-          {/* Content */}
           <div className="p-6">
             <div className="space-y-6">
-              {/* Patient Info */}
               <div className="rounded-lg bg-gray-50 p-4">
                 <h4 className="text-lg font-semibold text-gray-900">
                   {selectedPatient.patientName}
@@ -57,7 +54,6 @@ const PatientModal = ({
                 </div>
               </div>
 
-              {/* Appointments */}
               <div>
                 <div className="mb-4 flex items-center gap-2">
                   <Calendar className="h-5 w-5 text-blue-600" />

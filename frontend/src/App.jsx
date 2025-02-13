@@ -35,6 +35,7 @@ import DoctorPatientList from "./Doctor/DoctorPatientList.jsx";
 import HospitalPatientLists from "./Hospital/HospitalPatientList/HospitalPatientlist.jsx";
 import DoctorSchedule from "./Doctor/DoctorSchedule.jsx";
 import AdminAddHospital from "./Admin_new/AdminAddHealthcare.jsx";
+import HospitalRegister from "./Pages/HospitalRegister.jsx";
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
         <Route path="/hospital-card" element={<HospitalCard />} />
         <Route path="/hospitaldash" element={<Hospitaldash />} />
         <Route path="/hospital-doctorlist" element={<HospitalDoctorList />} />
+        <Route path="/hospital-register" element={<HospitalRegister />} />
         <Route
           path="/hospital-patientlist"
           element={<HospitalPatientLists />}

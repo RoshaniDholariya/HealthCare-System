@@ -20,11 +20,9 @@ const PatientDashboard = () => {
       const isMobileNow = screenWidth < 768;
       setIsMobile(isMobileNow);
 
-      // Automatically close sidebar on mobile
       if (isMobileNow) {
         setIsSidebarOpen(false);
       } else {
-        // Open sidebar on desktop
         setIsSidebarOpen(true);
       }
     };
@@ -84,7 +82,6 @@ const PatientDashboard = () => {
       />
 
       <div className={mainContentClass}>
-        {/* Mobile Header with Sidebar Toggle */}
         <div className="bg-white border-b sticky top-0 z-10 md:hidden">
           <div className="px-4 py-3 flex items-center">
             <button

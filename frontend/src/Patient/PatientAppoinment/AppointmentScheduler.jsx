@@ -295,11 +295,9 @@ const AppointmentScheduler = ({ onClose, onAppointmentBooked }) => {
             </SelectTrigger>
             <SelectContent>
               {SPECIALTIES.map((specialty) => {
-                // const SpecialtyIcon = specialty.icon;
                 return (
                   <SelectItem key={specialty.name} value={specialty.name}>
                     <div className="flex items-center space-x-2">
-                      {/* <SpecialtyIcon className="w-4 h-4" /> */}
                       <span>{specialty.name}</span>
                     </div>
                   </SelectItem>
