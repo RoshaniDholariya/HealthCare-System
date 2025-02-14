@@ -1,4 +1,3 @@
-// SpecialtiesSection.jsx
 import React from "react";
 import {
   Eye,
@@ -16,7 +15,6 @@ import {
   Bone,
   Syringe,
 } from "lucide-react";
-import { FaBacteria } from "react-icons/fa";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -65,11 +63,6 @@ const SPECIALTIES = [
     description: "Nervous system disorders",
   },
   {
-    name: "Oncology",
-    icon: FaBacteria,
-    description: "Cancer treatment",
-  },
-  {
     name: "Ophthalmology",
     icon: Eye,
     description: "Eye care and surgery",
@@ -110,36 +103,51 @@ const SPECIALTIES = [
 
 const SpecialtyCard = ({ specialty, isSelected, onToggle }) => {
   const IconComponent = specialty.icon;
+
+  const handleClick = (e) => {
+    // Prevent click event if clicking on the checkbox itself
+    if (e.target.tagName !== "INPUT") {
+      onToggle(specialty.name);
+    }
+  };
+
   return (
     <div
-      className="relative group cursor-pointer hover:shadow-md transition-all duration-200 p-3 rounded-lg border bg-white"
-      onClick={() => onToggle(specialty.name)}
+      className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 cursor-pointer
+        ${
+          isSelected
+            ? "bg-teal-50 border border-teal-200"
+            : "hover:bg-gray-50 border border-transparent hover:border-gray-200"
+        }`}
+      onClick={handleClick}
     >
-      <div className="flex items-center space-x-3">
-        <div
-          className={`p-2 rounded-full transition-colors duration-200 ${
-            isSelected ? "bg-teal-100" : "bg-gray-100 group-hover:bg-teal-50"
+      <div
+        className={`p-2 rounded-full transition-colors duration-200 
+          ${isSelected ? "bg-teal-100" : "bg-gray-100"}`}
+      >
+        <IconComponent
+          className={`h-4 w-4 ${
+            isSelected ? "text-teal-600" : "text-gray-600"
           }`}
-        >
-          <IconComponent
-            className={`h-4 w-4 ${
-              isSelected
-                ? "text-teal-600"
-                : "text-gray-600 group-hover:text-teal-500"
-            }`}
-          />
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="font-medium text-sm truncate">{specialty.name}</p>
-          <p className="text-xs text-gray-500 truncate">
-            {specialty.description}
-          </p>
-        </div>
-        <Checkbox
-          checked={isSelected}
-          className="transition-transform duration-200 group-hover:scale-110"
         />
       </div>
+      <div className="flex-1 min-w-0">
+        <p
+          className={`text-sm font-medium cursor-pointer ${
+            isSelected ? "text-teal-700" : "text-gray-700"
+          }`}
+        >
+          {specialty.name}
+        </p>
+        <p className="text-xs text-gray-500 truncate">
+          {specialty.description}
+        </p>
+      </div>
+      <Checkbox
+        checked={isSelected}
+        onCheckedChange={() => onToggle(specialty.name)}
+        className="border-gray-300 data-[state=checked]:bg-teal-600 data-[state=checked]:border-teal-600"
+      />
     </div>
   );
 };
@@ -149,11 +157,12 @@ const SpecialtiesSection = ({
   setSelectedSpecialties,
 }) => {
   const handleSpecialtyChange = (specialtyName) => {
-    setSelectedSpecialties((prev) =>
-      prev.includes(specialtyName)
-        ? prev.filter((s) => s !== specialtyName)
-        : [...prev, specialtyName]
-    );
+    setSelectedSpecialties((prev) => {
+      if (prev.includes(specialtyName)) {
+        return prev.filter((s) => s !== specialtyName);
+      }
+      return [...prev, specialtyName];
+    });
   };
 
   return (
